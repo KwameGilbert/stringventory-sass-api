@@ -5,6 +5,10 @@ Source: `src/routes/v1/SupplierRoute.php`
 Base path(s): `/v1/suppliers`
 Controller(s): `App\Controllers\SupplierController`
 
+## Definition
+
+Supplier routes manage supplier records. They are related to product sourcing, purchases, procurement history, and inventory replenishment.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -19,4 +23,5 @@ Controller(s): `App\Controllers\SupplierController`
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
