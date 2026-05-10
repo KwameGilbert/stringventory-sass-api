@@ -5,6 +5,10 @@ Source: `src/routes/v1/MessagingTemplateRoute.php`
 Base path(s): `/v1/messaging-templates`
 Controller(s): `App\Controllers\MessagingTemplateController`
 
+## Definition
+
+Messaging template routes manage reusable message templates. They are related to consistent SMS, email, or campaign content used by messaging workflows.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -19,4 +23,5 @@ Controller(s): `App\Controllers\MessagingTemplateController`
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
