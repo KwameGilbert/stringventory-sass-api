@@ -5,6 +5,10 @@ Source: `src/routes/v1/AuthRoute.php`
 Base path(s): `/v1/auth`
 Controller(s): `App\Controllers\AuthController`, `App\Controllers\PasswordResetController`
 
+## Definition
+
+Authentication routes manage account access and identity flows. They are related to user registration, login, token refresh, password reset, email verification, logout, and authenticated profile access.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -24,4 +28,5 @@ Controller(s): `App\Controllers\AuthController`, `App\Controllers\PasswordResetC
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
