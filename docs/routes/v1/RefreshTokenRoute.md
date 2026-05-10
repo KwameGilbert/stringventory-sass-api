@@ -5,6 +5,10 @@ Source: `src/routes/v1/RefreshTokenRoute.php`
 Base path(s): `/v1/refresh-tokens`
 Controller(s): `App\Controllers\RefreshTokenController`
 
+## Definition
+
+Refresh token routes manage persisted authentication refresh tokens. They are related to session continuity, token rotation, logout, and account security.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -19,4 +23,5 @@ Controller(s): `App\Controllers\RefreshTokenController`
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
