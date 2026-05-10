@@ -23,6 +23,7 @@ return function (App $app): void {
     // Routes (Protected)
     $app->group('/v1/units-of-measure', function ($group) use ($unitController, $managementRoles, $allRoles) {
         $group->get('', [$unitController, 'index']);
+        $group->get('/{id}', [$unitController, 'show']);
         $group->post('', [$unitController, 'create'])->add(new RoleMiddleware($managementRoles));
         $group->put('/{id}', [$unitController, 'update'])->add(new RoleMiddleware($managementRoles));
         $group->delete('/{id}', [$unitController, 'delete'])->add(new RoleMiddleware($managementRoles));

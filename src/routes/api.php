@@ -40,7 +40,6 @@ return function ($app): void {
         '/v1/transactions' => ROUTE . 'v1/TransactionRoute.php',
         '/v1/audit-logs' => ROUTE . 'v1/AuditLogRoute.php',
         '/v1/notifications' => ROUTE . 'v1/NotificationRoute.php',
-        '/v1/messaging' => ROUTE . 'v1/MessagingRoute.php',
         '/v1/logs' => ROUTE . 'v1/LoggingRoute.php',
         '/v1/utils' => ROUTE . 'v1/UtilsRoute.php',
 
@@ -55,9 +54,10 @@ return function ($app): void {
         '/v1/purchase-items' => ROUTE . 'v1/PurchaseItemRoute.php',
         '/v1/email-verification-tokens' => ROUTE . 'v1/EmailVerificationTokenRoute.php',
         '/v1/exchange-rate-histories' => ROUTE . 'v1/ExchangeRateHistoryRoute.php',
-        '/v1/messaging-campaigns' => ROUTE . 'v1/MessagingCampaignRoute.php',
         '/v1/messaging-campaign-recipients' => ROUTE . 'v1/MessagingCampaignRecipientRoute.php',
+        '/v1/messaging-campaigns' => ROUTE . 'v1/MessagingCampaignRoute.php',
         '/v1/messaging-templates' => ROUTE . 'v1/MessagingTemplateRoute.php',
+        '/v1/messaging' => ROUTE . 'v1/MessagingRoute.php',
         '/v1/user-settings' => ROUTE . 'v1/UserSettingRoute.php',
     ];
 

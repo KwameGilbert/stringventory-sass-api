@@ -27,6 +27,23 @@ class UnitOfMeasureController
     }
 
     /**
+     * Get a single unit of measure
+     */
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $unit = UnitOfMeasure::find($args['id']);
+            if (!$unit) {
+                return ResponseHelper::error($response, 'Unit of measure not found', 404);
+            }
+
+            return ResponseHelper::success($response, 'Unit of measure fetched successfully', $unit->toArray());
+        } catch (Exception $e) {
+            return ResponseHelper::error($response, 'Failed to fetch unit of measure', 500, $e->getMessage());
+        }
+    }
+
+    /**
      * Create a unit of measure
      */
     public function create(Request $request, Response $response): Response
