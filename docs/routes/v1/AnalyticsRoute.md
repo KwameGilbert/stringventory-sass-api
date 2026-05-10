@@ -5,6 +5,10 @@ Source: `src/routes/v1/AnalyticsRoute.php`
 Base path(s): `/v1/analytics`
 Controller(s): `App\Controllers\AnalyticsController`
 
+## Definition
+
+Analytics routes provide reporting endpoints for dashboards, sales, inventory, finance, customers, expenses, activity logs, and exports. They are related to business intelligence and read-only operational summaries across the application.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -22,4 +26,5 @@ Controller(s): `App\Controllers\AnalyticsController`
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
