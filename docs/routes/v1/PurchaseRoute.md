@@ -5,6 +5,10 @@ Source: `src/routes/v1/PurchaseRoute.php`
 Base path(s): `/v1/purchases`
 Controller(s): `App\Controllers\PurchaseController`
 
+## Definition
+
+Purchase routes manage supplier purchase records and approval actions. They are related to procurement, purchase items, suppliers, stock intake, and inventory updates.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -20,4 +24,5 @@ Controller(s): `App\Controllers\PurchaseController`
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
