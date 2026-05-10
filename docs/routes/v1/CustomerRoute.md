@@ -5,6 +5,10 @@ Source: `src/routes/v1/CustomerRoute.php`
 Base path(s): `/v1/customers`
 Controller(s): `App\Controllers\CustomerController`
 
+## Definition
+
+Customer routes manage customer records. They are related to sales, orders, refunds, customer history, and customer-focused reporting.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -19,4 +23,5 @@ Controller(s): `App\Controllers\CustomerController`
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
