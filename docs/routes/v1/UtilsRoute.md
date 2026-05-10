@@ -5,6 +5,10 @@ Source: `src/routes/v1/UtilsRoute.php`
 Base path(s): `/v1/utils`
 Controller(s): `App\Controllers\UtilsController`
 
+## Definition
+
+Utility routes expose helper endpoints that do not belong to one business resource. They are related to token generation, currency lists, and shared API support functions.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -16,4 +20,5 @@ Controller(s): `App\Controllers\UtilsController`
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
