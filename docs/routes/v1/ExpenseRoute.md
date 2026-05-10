@@ -5,6 +5,10 @@ Source: `src/routes/v1/ExpenseRoute.php`
 Base path(s): `/v1/expenses`
 Controller(s): `App\Controllers\ExpenseController`
 
+## Definition
+
+Expense routes manage business expense records. They are related to cost tracking, expense reporting, schedules, and financial analytics.
+
 ## Endpoints
 
 | Method | Path | Controller action | Access | Description |
@@ -19,4 +23,5 @@ Controller(s): `App\Controllers\ExpenseController`
 
 - Authentication and role requirements are derived from route middleware declarations in the route file.
 - Request and response payloads should be verified against the controller implementation and model validation rules before publishing as an external API contract.
+
 
