@@ -17,6 +17,7 @@ class AuditLog extends Model
     const CREATED_AT = 'createdAt';
 
     protected $fillable = [
+        'businessId',
         'userId',
         'action',
         'ipAddress',
@@ -25,6 +26,7 @@ class AuditLog extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'metadata' => 'array',
         'createdAt' => 'datetime',
         'userId' => 'integer',
@@ -153,17 +155,24 @@ class AuditLog extends Model
      */
     public static function log(
         Request $request,
+        ?int $businessId,
         ?int $userId,
         string $action,
         array $extra = []
     ): void {
         $serverParams = $request->getServerParams();
         self::create([
+            'businessId' => $businessId,
             'userId'    => $userId,
             'action'    => $action,
             'ipAddress' => $serverParams['REMOTE_ADDR'] ?? '0.0.0.0',
             'userAgent' => $request->getHeaderLine('User-Agent'),
             'metadata'  => !empty($extra) ? $extra : null,
         ]);
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

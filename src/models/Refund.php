@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * Refund Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property int $orderId
  * @property int $customerId
  * @property string $refundType
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $refundReason
  * @property string $refundStatus
  * @property string|null $notes
- * @property string|null $paymentMethod
+ * @property int|null $paymentMethodId
  * @property \Illuminate\Support\Carbon|null $updatedAt
  * @property \Illuminate\Support\Carbon|null $createdAt
  */
@@ -31,10 +32,11 @@ class Refund extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'orderId',
         'customerId',
         'refundType',
-        'paymentMethod',
+        'paymentMethodId',
         'refundAmount',
         'refundDate',
         'refundReason',
@@ -47,6 +49,7 @@ class Refund extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'orderId' => 'integer',
         'customerId' => 'integer',
         'refundAmount' => 'float',
@@ -57,6 +60,7 @@ class Refund extends Model
         'createdAt' => 'datetime',
         'createdBy' => 'integer',
         'currency' => 'string',
+        'paymentMethodId' => 'integer',
     ];
 
     public function getCreatedByAttribute($value): string|int|null
@@ -85,5 +89,15 @@ class Refund extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'refundId');
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'paymentMethodId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

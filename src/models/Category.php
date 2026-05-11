@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * Category Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property string $name
  * @property string|null $image
  * @property string|null $description
@@ -25,6 +26,7 @@ class Category extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'name',
         'image',
         'description',
@@ -32,11 +34,17 @@ class Category extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'createdAt' => 'datetime',
     ];
 
     public function products()
     {
         return $this->hasMany(Product::class, 'categoryId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

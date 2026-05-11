@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Model;
  * Expense Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property int|null $expenseScheduleId
  * @property int $expenseCategoryId
  * @property float $amount
  * @property \Illuminate\Support\Carbon $transactionDate
  * @property string|null $notes
  * @property string $status
+ * @property int|null $paymentMethodId
  * @property \Illuminate\Support\Carbon|null $createdAt
  */
 class Expense extends Model
@@ -26,6 +28,7 @@ class Expense extends Model
     const CREATED_AT = 'createdAt';
 
     protected $fillable = [
+        'businessId',
         'expenseScheduleId',
         'expenseCategoryId',
         'amount',
@@ -36,11 +39,13 @@ class Expense extends Model
         'currency',
         'evidence',
         'reference',
+        'paymentMethodId',
     ];
 
     protected $appends = ['paymentMethod'];
 
     protected $casts = [
+        'businessId' => 'integer',
         'expenseScheduleId' => 'integer',
         'expenseCategoryId' => 'integer',
         'amount' => 'float',
@@ -50,12 +55,16 @@ class Expense extends Model
         'currency' => 'string',
         'evidence' => 'string',
         'reference' => 'string',
+        'paymentMethodId' => 'integer',
     ];
 
     public function getPaymentMethodAttribute(): ?string
     {
+        if ($this->relationLoaded('paymentMethod') && $this->paymentMethod) {
+            return $this->paymentMethod->name;
+        }
         if ($this->relationLoaded('transaction')) {
-            return $this->transaction?->paymentMethod;
+            return $this->transaction?->paymentMethod?->name;
         }
         return null;
     }
@@ -91,5 +100,15 @@ class Expense extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'expenseId');
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'paymentMethodId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

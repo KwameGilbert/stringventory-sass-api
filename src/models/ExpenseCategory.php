@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * ExpenseCategory Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property string $name
  * @property string|null $description
  * @property string $status
@@ -25,12 +26,14 @@ class ExpenseCategory extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'name',
         'description',
         'status',
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'createdAt' => 'datetime',
         'updatedAt' => 'datetime',
     ];
@@ -43,5 +46,10 @@ class ExpenseCategory extends Model
     public function expenses()
     {
         return $this->hasMany(Expense::class, 'expenseCategoryId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

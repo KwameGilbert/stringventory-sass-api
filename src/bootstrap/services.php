@@ -14,7 +14,6 @@ use App\Services\VerificationService;
 use App\Services\ExpenseService;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
-use App\Controllers\OrganizerController;
 use App\Controllers\PasswordResetController;
 use App\Controllers\AttendeeController;
 use App\Controllers\EventController;
@@ -45,6 +44,20 @@ use App\Controllers\AnalyticsController;
 use App\Controllers\NotificationController;
 use App\Controllers\MessagingController;
 use App\Controllers\UnitOfMeasureController;
+use App\Controllers\BusinessController;
+use App\Controllers\PlanController;
+use App\Controllers\SubscriptionController;
+use App\Controllers\PaymentMethodController;
+use App\Controllers\PushSubscriptionController;
+use App\Controllers\RefreshTokenController;
+use App\Controllers\OrderItemController;
+use App\Controllers\PurchaseItemController;
+use App\Controllers\EmailVerificationTokenController;
+use App\Controllers\ExchangeRateHistoryController;
+use App\Controllers\MessagingCampaignController;
+use App\Controllers\MessagingCampaignRecipientController;
+use App\Controllers\MessagingTemplateController;
+use App\Controllers\UserSettingController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\RoleMiddleware;
 use App\Middleware\RateLimitMiddleware;
@@ -161,10 +174,6 @@ return function ($container) {
             $container->get(NotificationService::class)
         );
     });
-
-    $container->set(OrganizerController::class, function () {
-        return new OrganizerController();
-    });
     
     $container->set(PasswordResetController::class, function ($container) {
         return new PasswordResetController(
@@ -279,6 +288,91 @@ return function ($container) {
     $container->set(MessagingController::class, function ($container) {
         return new MessagingController(
             $container->get(MessagingService::class)
+        );
+    });
+
+    $container->set(BusinessController::class, function ($container) {
+        return new BusinessController(
+            $container->get(NotificationService::class)
+        );
+    });
+
+    $container->set(PlanController::class, function () {
+        return new PlanController();
+    });
+
+    $container->set(SubscriptionController::class, function ($container) {
+        return new SubscriptionController(
+            $container->get(BusinessController::class),
+            $container->get(PlanController::class),
+            $container->get(NotificationService::class)
+        );
+    });
+
+    $container->set(PaymentMethodController::class, function () {
+        return new PaymentMethodController();
+    });
+
+    $container->set(PushSubscriptionController::class, function () {
+        return new PushSubscriptionController();
+    });
+
+    $container->set(RefreshTokenController::class, function () {
+        return new RefreshTokenController();
+    });
+
+    $container->set(OrderItemController::class, function ($container) {
+        return new OrderItemController(
+            $container->get(OrderController::class),
+            $container->get(ProductController::class)
+        );
+    });
+
+    $container->set(PurchaseItemController::class, function ($container) {
+        return new PurchaseItemController(
+            $container->get(PurchaseController::class),
+            $container->get(ProductController::class)
+        );
+    });
+
+    $container->set(EmailVerificationTokenController::class, function ($container) {
+        return new EmailVerificationTokenController(
+            $container->get(UserController::class),
+            $container->get(VerificationService::class)
+        );
+    });
+
+    $container->set(ExchangeRateHistoryController::class, function ($container) {
+        return new ExchangeRateHistoryController(
+            $container->get(SettingsController::class),
+            $container->get(CurrencyService::class)
+        );
+    });
+
+    $container->set(MessagingCampaignController::class, function ($container) {
+        return new MessagingCampaignController(
+            $container->get(MessagingTemplateController::class),
+            $container->get(MessagingService::class)
+        );
+    });
+
+    $container->set(MessagingCampaignRecipientController::class, function ($container) {
+        return new MessagingCampaignRecipientController(
+            $container->get(CustomerController::class),
+            $container->get(MessagingCampaignController::class)
+        );
+    });
+
+    $container->set(MessagingTemplateController::class, function ($container) {
+        return new MessagingTemplateController(
+            $container->get(MessagingService::class)
+        );
+    });
+
+    $container->set(UserSettingController::class, function ($container) {
+        return new UserSettingController(
+            $container->get(UserController::class),
+            $container->get(SettingsController::class)
         );
     });
     

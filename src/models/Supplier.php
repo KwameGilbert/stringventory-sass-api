@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * Supplier Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property string $name
  * @property string|null $email
  * @property string|null $phone
@@ -28,6 +29,7 @@ class Supplier extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'name',
         'email',
         'phone',
@@ -38,6 +40,7 @@ class Supplier extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'createdAt' => 'datetime',
         'rating' => 'integer',
     ];
@@ -50,5 +53,10 @@ class Supplier extends Model
     public function purchases()
     {
         return $this->hasMany(Purchase::class, 'supplierId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

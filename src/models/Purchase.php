@@ -15,6 +15,7 @@ class Purchase extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'supplierId',
         'purchaseNumber',
         'waybillNumber',
@@ -29,13 +30,14 @@ class Purchase extends Model
         'totalAmount',
         'status',
         'paymentStatus',
-        'paymentMethod',
+        'paymentMethodId',
         'notes',
         'createdBy',
         'currency',
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'supplierId' => 'integer',
         'purchaseDate' => 'datetime',
         'dueDate' => 'datetime',
@@ -49,6 +51,7 @@ class Purchase extends Model
         'updatedAt' => 'datetime',
         'createdBy' => 'integer',
         'currency' => 'string',
+        'paymentMethodId' => 'integer',
     ];
 
     public function getCreatedByAttribute($value): string|int|null
@@ -77,5 +80,15 @@ class Purchase extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'purchaseId');
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'paymentMethodId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

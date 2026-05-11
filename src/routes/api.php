@@ -43,6 +43,22 @@ return function ($app): void {
         '/v1/messaging' => ROUTE . 'v1/MessagingRoute.php',
         '/v1/logs' => ROUTE . 'v1/LoggingRoute.php',
         '/v1/utils' => ROUTE . 'v1/UtilsRoute.php',
+
+        // Newly Created Domain Routes
+        '/v1/businesses' => ROUTE . 'v1/BusinessRoute.php',
+        '/v1/plans' => ROUTE . 'v1/PlanRoute.php',
+        '/v1/subscriptions' => ROUTE . 'v1/SubscriptionRoute.php',
+        '/v1/payment-methods' => ROUTE . 'v1/PaymentMethodRoute.php',
+        '/v1/push-subscriptions' => ROUTE . 'v1/PushSubscriptionRoute.php',
+        '/v1/refresh-tokens' => ROUTE . 'v1/RefreshTokenRoute.php',
+        '/v1/order-items' => ROUTE . 'v1/OrderItemRoute.php',
+        '/v1/purchase-items' => ROUTE . 'v1/PurchaseItemRoute.php',
+        '/v1/email-verification-tokens' => ROUTE . 'v1/EmailVerificationTokenRoute.php',
+        '/v1/exchange-rate-histories' => ROUTE . 'v1/ExchangeRateHistoryRoute.php',
+        '/v1/messaging-campaigns' => ROUTE . 'v1/MessagingCampaignRoute.php',
+        '/v1/messaging-campaign-recipients' => ROUTE . 'v1/MessagingCampaignRecipientRoute.php',
+        '/v1/messaging-templates' => ROUTE . 'v1/MessagingTemplateRoute.php',
+        '/v1/user-settings' => ROUTE . 'v1/UserSettingRoute.php',
     ];
 
     $loadedFiles = [];

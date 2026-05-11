@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Model;
  * Product Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property string $name
  * @property string|null $sku
  * @property string|null $description
  * @property int|null $categoryId
  * @property int|null $supplierId
+ * @property int|null $unitOfMeasureId
  * @property float $sellingPrice
  * @property float|null $costPrice
  * @property int|null $unitOfMeasureId
@@ -34,6 +36,7 @@ class Product extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'name',
         'sku',
         'description',
@@ -49,6 +52,7 @@ class Product extends Model
     ];
     
     protected $casts = [
+        'businessId' => 'integer',
         'categoryId' => 'integer',
         'supplierId' => 'integer',
         'sellingPrice' => 'float',
@@ -100,5 +104,10 @@ class Product extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class, 'productId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

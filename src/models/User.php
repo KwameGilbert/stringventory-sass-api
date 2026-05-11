@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * User Model
  * 
- * @property int $id
+ * @property int|null $businessId
+ * @property bool $isSuperAdmin
  * @property string $firstName
  * @property string $lastName
  * @property string $role
@@ -34,6 +35,7 @@ class User extends Model
     const UPDATED_AT = 'updatedAt';
 
     // Roles
+    const ROLE_OWNER = 'owner';
     const ROLE_CEO = 'ceo';
     const ROLE_MANAGER = 'manager';
     const ROLE_SALESPERSON = 'salesperson';
@@ -44,6 +46,8 @@ class User extends Model
     const STATUS_SUSPENDED = 'suspended';
 
     protected $fillable = [
+        'businessId',
+        'isSuperAdmin',
         'firstName',
         'lastName',
         'role',
@@ -62,6 +66,8 @@ class User extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
+        'isSuperAdmin' => 'boolean',
         'emailVerified' => 'boolean',
         'mustChangePassword' => 'boolean',
         'lastLogin' => 'datetime',
@@ -99,5 +105,10 @@ class User extends Model
     public function auditLogs()
     {
         return $this->hasMany(AuditLog::class, 'userId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * Discount Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property string $name
  * @property string|null $description
  * @property float|null $discount
@@ -33,6 +34,7 @@ class Discount extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'name',
         'description',
         'discount',
@@ -47,6 +49,7 @@ class Discount extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'discount' => 'float',
         'discountAmount' => 'float',
         'startDate' => 'datetime',
@@ -60,5 +63,10 @@ class Discount extends Model
     public function orders()
     {
         return $this->hasMany(Order::class, 'discountId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

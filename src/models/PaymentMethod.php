@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * PaymentMethod Model
  * 
- * @property string $id
+ * @property int $id
+ * @property int $businessId
  * @property string $name
  * @property string $type
  * @property bool $enabled
@@ -21,7 +22,6 @@ class PaymentMethod extends Model
 {
     protected $table = 'payment_methods';
     protected $primaryKey = 'id';
-    public $incrementing = false;
     public $timestamps = false; // Using custom datetime columns via migrations
 
     const CREATED_AT = 'createdAt';
@@ -29,6 +29,8 @@ class PaymentMethod extends Model
 
     protected $fillable = [
         'id',
+        'businessId',
+        'methodCode',
         'name',
         'type',
         'enabled',
@@ -36,8 +38,14 @@ class PaymentMethod extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'enabled' => 'boolean',
         'createdAt' => 'datetime',
         'updatedAt' => 'datetime',
     ];
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
+    }
 }

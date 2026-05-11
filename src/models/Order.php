@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * Order Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property string $orderNumber
  * @property int|null $customerId
  * @property string $status
@@ -38,6 +39,7 @@ class Order extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'orderNumber',
         'customerId',
         'createdBy',
@@ -53,6 +55,7 @@ class Order extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'customerId' => 'integer',
         'createdBy' => 'integer',
         'discountId' => 'integer',
@@ -101,5 +104,10 @@ class Order extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'orderId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

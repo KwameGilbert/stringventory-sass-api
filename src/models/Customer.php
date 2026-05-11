@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * Customer Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property string|null $firstName
  * @property string|null $lastName
  * @property string|null $businessName
@@ -27,6 +28,7 @@ class Customer extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'firstName',
         'lastName',
         'email',
@@ -38,6 +40,7 @@ class Customer extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'loyaltyPoints' => 'integer',
         'updatedAt' => 'datetime',
         'createdAt' => 'datetime',
@@ -59,5 +62,10 @@ class Customer extends Model
             return $this->businessName;
         }
         return "{$this->firstName} {$this->lastName}";
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

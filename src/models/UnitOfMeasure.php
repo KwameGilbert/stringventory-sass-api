@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * UnitOfMeasure Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property string $name
  * @property string|null $abbreviation
  * @property \Illuminate\Support\Carbon|null $createdAt
@@ -24,11 +25,13 @@ class UnitOfMeasure extends Model
     const UPDATED_AT = 'updatedAt';
 
     protected $fillable = [
+        'businessId',
         'name',
         'abbreviation',
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'createdAt' => 'datetime',
         'updatedAt' => 'datetime',
     ];
@@ -36,5 +39,10 @@ class UnitOfMeasure extends Model
     public function products()
     {
         return $this->hasMany(Product::class, 'unitOfMeasureId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }

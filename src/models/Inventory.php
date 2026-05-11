@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * Inventory Model
  * 
  * @property int $id
+ * @property int $businessId
  * @property int $productId
  * @property int $quantity
  * @property string|null $warehouseLocation
@@ -24,6 +25,7 @@ class Inventory extends Model
     const CREATED_AT = 'createdAt';
 
     protected $fillable = [
+        'businessId',
         'productId',
         'quantity',
         'warehouseLocation',
@@ -32,6 +34,7 @@ class Inventory extends Model
     ];
 
     protected $casts = [
+        'businessId' => 'integer',
         'productId' => 'integer',
         'quantity' => 'integer',
         'createdAt' => 'datetime',
@@ -47,5 +50,10 @@ class Inventory extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'productId');
+    }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'businessId');
     }
 }
