@@ -80,6 +80,10 @@ return function ($container) {
     
     // ==================== SERVICES ====================
     
+    $container->set('pdo', function ($container) {
+        return $container->get('db')->getConnection()->getPdo();
+    });
+
     $container->set(EmailService::class, function () {
         return new EmailService();
     });
