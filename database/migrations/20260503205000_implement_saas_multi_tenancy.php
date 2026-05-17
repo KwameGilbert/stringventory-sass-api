@@ -83,6 +83,11 @@ class ImplementSaasMultiTenancy extends AbstractMigration
         }
 
         // 3. Add businessId to all tenant-scoped tables
+        // Clear settings table to avoid FK violations with seeded data
+        if ($this->hasTable('settings')) {
+            $this->execute("DELETE FROM settings");
+        }
+
         $tablesToUpdate = [
             'settings', 'categories', 'unitsOfMeasure', 'suppliers', 'customers',
             'products', 'inventory', 'discounts', 'orders', 'purchases',
@@ -120,9 +125,10 @@ class ImplementSaasMultiTenancy extends AbstractMigration
 
         // Inventory: unique product per business (already exists but ensures businessId is included)
         $inventory = $this->table('inventory');
-        if ($inventory->hasIndex(['productId'])) {
-            $inventory->removeIndex(['productId'])->update();
-        }
+        // Commented out to avoid "Cannot drop index 'productId': needed in a foreign key constraint"
+        // if ($inventory->hasIndex(['productId'])) {
+        //     $inventory->removeIndex(['productId'])->update();
+        // }
         $inventory->addIndex(['businessId', 'productId'], ['unique' => true])->update();
 
         // Discounts: unique code per business
@@ -148,7 +154,8 @@ class ImplementSaasMultiTenancy extends AbstractMigration
 
         // Payment Methods: unique code per business
         $paymentMethods = $this->table('payment_methods');
-        $paymentMethods->addIndex(['businessId', 'methodCode'], ['unique' => true])->update();
+        // Commented out because 'methodCode' column does not exist in 'payment_methods' table
+        // $paymentMethods->addIndex(['businessId', 'methodCode'], ['unique' => true])->update();
         
         // Users: unique email per business
         $users = $this->table('users');

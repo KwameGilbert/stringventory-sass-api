@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  * User Model
  * 
  * @property int|null $businessId
- * @property bool $isSuperAdmin
  * @property string $firstName
  * @property string $lastName
  * @property string $role
@@ -35,6 +34,7 @@ class User extends Model
     const UPDATED_AT = 'updatedAt';
 
     // Roles
+    const ROLE_SUPER_ADMIN = 'super_admin';
     const ROLE_OWNER = 'owner';
     const ROLE_CEO = 'ceo';
     const ROLE_MANAGER = 'manager';
@@ -47,7 +47,6 @@ class User extends Model
 
     protected $fillable = [
         'businessId',
-        'isSuperAdmin',
         'firstName',
         'lastName',
         'role',
@@ -67,7 +66,6 @@ class User extends Model
 
     protected $casts = [
         'businessId' => 'integer',
-        'isSuperAdmin' => 'boolean',
         'emailVerified' => 'boolean',
         'mustChangePassword' => 'boolean',
         'lastLogin' => 'datetime',
@@ -76,14 +74,14 @@ class User extends Model
     ];
 
     /**
-     * Auto-hash password with Argon2id on set.
+     * Auto-hash password with Bcrypt on set.
      */
     public function setPasswordHashAttribute($value)
     {
         if (preg_match('/^(\$argon2|\$2y\$)/', $value)) {
             $this->attributes['passwordHash'] = $value;
         } else {
-            $this->attributes['passwordHash'] = password_hash($value, PASSWORD_ARGON2ID);
+            $this->attributes['passwordHash'] = password_hash($value, PASSWORD_BCRYPT);
         }
     }
 
