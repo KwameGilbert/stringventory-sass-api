@@ -23,7 +23,8 @@
       "App\\Middleware\\": "src/middleware/",
       "App\\Routes\\": "src/routes/",
       "App\\Config\\": "src/config",
-      "App\\Logging\\": "src/logging/"
+      "App\\Logging\\": "src/logging/",
+      "App\\Traits\\": "src/traits/"
     }
   },
   "require": {
