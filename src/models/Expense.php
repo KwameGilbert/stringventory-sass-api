@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Tenantable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,6 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Expense extends Model
 {
+    use Tenantable;
+
+
     protected $table = 'expenses';
     public $timestamps = false;
 

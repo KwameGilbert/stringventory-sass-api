@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Tenantable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PaymentMethod extends Model
 {
+    use Tenantable;
+
     protected $table = 'payment_methods';
     protected $primaryKey = 'id';
     public $timestamps = false; // Using custom datetime columns via migrations

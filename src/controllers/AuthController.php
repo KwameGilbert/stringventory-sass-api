@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Models\Business;
+use App\Models\Plan;
+use App\Models\Subscription;
 use App\Helper\ResponseHelper;
 use App\Services\AuthService;
 use App\Services\EmailService;
@@ -57,13 +60,36 @@ class AuthController
                 return ResponseHelper::error($response, 'Account already exists with this email', 409);
             }
 
+            // Create business
+            $business = Business::create([
+                'name' => $data['businessName'],
+                'email' => $data['email'],
+                'status' => 'active',
+            ]);
+
+            // Assign free trial plan
+            $plan = Plan::where('name', 'starter')->orWhere('monthlyPrice', '<=', 0)->first();
+            $planId = $plan ? $plan->id : null;
+
+            if ($planId) {
+                Subscription::create([
+                    'businessId' => $business->id,
+                    'planId' => $planId,
+                    'billingCycle' => 'monthly',
+                    'status' => 'active',
+                    'trialEndsAt' => date('Y-m-d H:i:s', strtotime('+14 days')),
+                    'mrr' => 0,
+                ]);
+            }
+
             // Create user
             $user = User::create([
+                'businessId' => $business->id,
                 'firstName' => $data['firstName'],
                 'lastName' => $data['lastName'],
                 'email' => $data['email'],
                 'passwordHash' => $data['password'], // Hash is handled by model setter
-                'role' => $data['role'] ?? User::ROLE_SALESPERSON,
+                'role' => User::ROLE_CEO,
                 'status' => User::STATUS_ACTIVE,
                 'emailVerified' => false,
                 'phone' => $data['phone'] ?? null
@@ -113,7 +139,7 @@ class AuthController
                 return ResponseHelper::error($response, 'Email and password are required', 400);
             }
 
-            $user = User::where('email', $data['email'])->first();
+            $user = User::with(['business.subscription.plan'])->where('email', $data['email'])->first();
 
             if (!$user) {
                 $this->authService->logAuditEvent(null, 'login_failed', array_merge($metadata, [
@@ -133,6 +159,10 @@ class AuthController
                 return ResponseHelper::error($response, 'Account is not active', 403);
             }
 
+            if ($user->business && $user->business->status === 'suspended') {
+                return ResponseHelper::error($response, 'Your account has been suspended. Please contact support.', 403);
+            }
+
             // Update last login
             $user->update(['lastLogin' => date('Y-m-d H:i:s')]);
 
@@ -150,6 +180,10 @@ class AuthController
                     'lastName' => $user->lastName,
                     'email' => $user->email,
                     'role' => $user->role,
+                    'businessId' => $user->businessId,
+                    'subscriptionPlan' => $user->business->subscription->plan->name ?? 'unknown',
+                    'subscriptionStatus' => $user->business->subscription->status ?? 'inactive',
+                    'isSuperAdmin' => $user->role === User::ROLE_SUPER_ADMIN,
                     'mustChangePassword' => (bool) $user->mustChangePassword,
                 ],
                 'access_token' => $accessToken,
@@ -357,6 +391,7 @@ class AuthController
         if (empty($data['lastName'])) $errors['lastName'] = 'Last name is required';
         if (empty($data['email']) || !v::email()->validate($data['email'])) $errors['email'] = 'Valid email is required';
         if (empty($data['password']) || strlen($data['password']) < 8) $errors['password'] = 'Password must be at least 8 characters';
+        if (empty($data['businessName'])) $errors['businessName'] = 'Business name is required';
         
         if (isset($data['role']) && !in_array($data['role'], [User::ROLE_CEO, User::ROLE_MANAGER, User::ROLE_SALESPERSON])) {
             $errors['role'] = 'Invalid role';

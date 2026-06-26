@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use App\Services\AuthService;
+use App\Services\TenantContext;
 use App\Helper\ResponseHelper;
 
 /**
@@ -91,6 +92,14 @@ class AuthMiddleware
 
         // Add user data to request attributes for use in controllers
         $request = $request->withAttribute('user', $decoded->data);
+
+        // Set global tenant context for Eloquent scopes
+        if (isset($decoded->data->businessId)) {
+            TenantContext::setTenantId((int)$decoded->data->businessId);
+        }
+        if (isset($decoded->data->isSuperAdmin)) {
+            TenantContext::setIsSuperAdmin((bool)$decoded->data->isSuperAdmin);
+        }
 
         // Continue with the request
         return $handler->handle($request);

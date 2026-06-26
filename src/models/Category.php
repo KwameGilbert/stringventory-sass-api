@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Tenantable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Category extends Model
 {
+    use Tenantable;
+
     protected $table = 'categories';
     public $timestamps = true;
     const CREATED_AT = 'createdAt';

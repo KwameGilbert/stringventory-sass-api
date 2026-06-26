@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Tenantable;
 use Illuminate\Database\Eloquent\Model;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -12,6 +13,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class AuditLog extends Model
 {
+    use Tenantable;
+
     protected $table = 'auditLogs';
     public $timestamps = false;
     const CREATED_AT = 'createdAt';

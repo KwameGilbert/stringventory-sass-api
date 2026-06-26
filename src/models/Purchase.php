@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Tenantable;
 use Illuminate\Database\Eloquent\Model;
 
 class Purchase extends Model
 {
+    use Tenantable;
+
     protected $table = 'purchases';
     public $timestamps = true;
 

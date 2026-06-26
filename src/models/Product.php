@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Tenantable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Product extends Model
 {
+    use Tenantable;
+
     protected $table = 'products';
     public $timestamps = true;
 

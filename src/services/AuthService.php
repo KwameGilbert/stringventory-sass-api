@@ -127,13 +127,22 @@ class AuthService
     public function generateUserPayload($user): array
     {
         if (is_object($user)) {
+            // Ensure relations are loaded for JWT payload
+            if (method_exists($user, 'loadMissing')) {
+                $user->loadMissing(['business.subscription.plan']);
+            }
+            
             return [
                 'id' => $user->id,
                 'email' => $user->email,
                 'role' => $user->role,
                 'status' => $user->status,
                 'firstName' => $user->firstName,
-                'lastName' => $user->lastName
+                'lastName' => $user->lastName,
+                'businessId' => $user->businessId,
+                'subscriptionPlan' => $user->business->subscription->plan->name ?? 'unknown',
+                'subscriptionStatus' => $user->business->subscription->status ?? 'inactive',
+                'isSuperAdmin' => $user->role === \App\Models\User::ROLE_SUPER_ADMIN,
             ];
         }
 
@@ -141,7 +150,11 @@ class AuthService
             'id' => $user['id'] ?? null,
             'email' => $user['email'] ?? null,
             'role' => $user['role'] ?? 'salesperson',
-            'status' => $user['status'] ?? 'active'
+            'status' => $user['status'] ?? 'active',
+            'businessId' => $user['businessId'] ?? null,
+            'subscriptionPlan' => $user['subscriptionPlan'] ?? 'unknown',
+            'subscriptionStatus' => $user['subscriptionStatus'] ?? 'inactive',
+            'isSuperAdmin' => $user['isSuperAdmin'] ?? false,
         ];
     }
 
