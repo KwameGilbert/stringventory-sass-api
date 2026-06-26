@@ -59,6 +59,9 @@ return function ($app): void {
         '/v1/messaging-templates' => ROUTE . 'v1/MessagingTemplateRoute.php',
         '/v1/messaging' => ROUTE . 'v1/MessagingRoute.php',
         '/v1/user-settings' => ROUTE . 'v1/UserSettingRoute.php',
+
+        // Superadmin Routes
+        'v1/superadmin' => ROUTE . 'v1/SuperadminRoute.php',
     ];
 
     $loadedFiles = [];

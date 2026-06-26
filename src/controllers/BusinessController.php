@@ -6,11 +6,15 @@ namespace App\Controllers;
 
 use App\Models\Business;
 use App\Models\AuditLog;
+use App\Models\Product;
+use App\Models\User;
+use App\Models\Subscription;
 use App\Helper\ResponseHelper;
 use App\Services\NotificationService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Exception;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class BusinessController
 {
@@ -27,8 +31,51 @@ class BusinessController
     public function index(Request $request, Response $response): Response
     {
         try {
-            $businesses = Business::withCount(['users'])->get();
-            return ResponseHelper::success($response, 'Businesses fetched successfully', $businesses->toArray());
+            $queryParams = $request->getQueryParams();
+            $page = (int)($queryParams['page'] ?? 1);
+            $limit = (int)($queryParams['limit'] ?? 20);
+            $status = $queryParams['status'] ?? null;
+            $search = $queryParams['search'] ?? null;
+
+            $query = Business::with(['users', 'subscription', 'subscription.plan']);
+
+            if ($status) {
+                $query->where('status', $status);
+            }
+
+            if ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+
+            $total = $query->count();
+            $businesses = $query->offset(($page - 1) * $limit)->limit($limit)->get();
+
+            $mappedBusinesses = $businesses->map(function ($business) {
+                $data = $business->toArray();
+                $data['current_usage'] = [
+                    'total_users' => User::where('businessId', $business->id)->count(),
+                    'total_products' => Product::where('businessId', $business->id)->count(),
+                ];
+                $data['mrr'] = $business->subscription && $business->subscription->plan ? (float) $business->subscription->plan->priceMonthly : 0;
+                $data['subscription_plan'] = $business->subscription && $business->subscription->plan ? $business->subscription->plan->name : null;
+                return $data;
+            });
+
+            return ResponseHelper::jsonResponse($response, [
+                'success' => true,
+                'data' => [
+                    'businesses' => $mappedBusinesses,
+                    'pagination' => [
+                        'total' => $total,
+                        'page' => $page,
+                        'limit' => $limit,
+                        'pages' => ceil($total / $limit)
+                    ]
+                ]
+            ]);
         } catch (Exception $e) {
             return ResponseHelper::error($response, 'Failed to fetch businesses', 500, $e->getMessage());
         }
@@ -40,11 +87,20 @@ class BusinessController
     public function show(Request $request, Response $response, array $args): Response
     {
         try {
-            $business = Business::with(['users', 'subscription'])->find($args['id']);
+            $business = Business::with(['users', 'subscription', 'subscription.plan'])->find($args['id']);
             if (!$business) {
                 return ResponseHelper::error($response, 'Business not found', 404);
             }
-            return ResponseHelper::success($response, 'Business fetched successfully', $business->toArray());
+
+            $data = $business->toArray();
+            $data['activityLogs'] = AuditLog::where('businessId', $business->id)->orderBy('createdAt', 'desc')->limit(50)->get()->toArray();
+            
+            return ResponseHelper::jsonResponse($response, [
+                'success' => true,
+                'data' => [
+                    'business' => $data
+                ]
+            ]);
         } catch (Exception $e) {
             return ResponseHelper::error($response, 'Failed to fetch business', 500, $e->getMessage());
         }

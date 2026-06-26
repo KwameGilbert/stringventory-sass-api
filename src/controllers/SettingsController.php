@@ -422,4 +422,57 @@ class SettingsController
             return ResponseHelper::error($response, 'Failed to regenerate API key', 500, $e->getMessage());
         }
     }
+
+    /**
+     * Get Superadmin Platform Settings
+     */
+    public function getSuperadminSettings(Request $request, Response $response): Response
+    {
+        try {
+            $settings = Setting::whereNull('businessId')->where('category', 'platform')->first();
+            $data = $settings ? $settings->data : [];
+            
+            return ResponseHelper::jsonResponse($response, [
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (Exception $e) {
+            return ResponseHelper::error($response, 'Failed to fetch platform settings', 500, $e->getMessage());
+        }
+    }
+
+    /**
+     * Update Superadmin Platform Settings
+     */
+    public function updateSuperadminSettings(Request $request, Response $response): Response
+    {
+        try {
+            $data = $request->getParsedBody();
+            
+            $settings = Setting::whereNull('businessId')->where('category', 'platform')->first();
+            
+            if ($settings) {
+                $mergedData = array_merge($settings->data ?? [], $data);
+                $settings->update(['data' => $mergedData]);
+            } else {
+                $settings = Setting::create([
+                    'businessId' => null,
+                    'category' => 'platform',
+                    'data' => $data
+                ]);
+                $mergedData = $data;
+            }
+
+            $user = $request->getAttribute('user');
+            AuditLog::log($request, null, $user ? $user->id : null, 'platform_settings_updated');
+
+            return ResponseHelper::jsonResponse($response, [
+                'success' => true,
+                'message' => 'Platform settings updated successfully',
+                'data' => $mergedData
+            ]);
+        } catch (Exception $e) {
+            return ResponseHelper::error($response, 'Failed to update platform settings', 500, $e->getMessage());
+        }
+    }
 }
