@@ -15,6 +15,7 @@ use App\Models\PurchaseItem;
 use App\Models\AuditLog;
 use App\Helper\ResponseHelper;
 use App\Services\NotificationService;
+use App\Services\LimitEnforcementService;
 use App\Services\CurrencyService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -28,10 +29,12 @@ use Exception;
 class OrderController
 {
     private NotificationService $notificationService;
+    private LimitEnforcementService $limitEnforcementService;
 
-    public function __construct(NotificationService $notificationService)
+    public function __construct(NotificationService $notificationService, LimitEnforcementService $limitEnforcementService)
     {
         $this->notificationService = $notificationService;
+        $this->limitEnforcementService = $limitEnforcementService;
     }
 
     /**
@@ -73,6 +76,11 @@ class OrderController
     {
         DB::beginTransaction();
         try {
+            if (!$this->limitEnforcementService->canCreateOrder()) {
+                DB::rollBack();
+                return ResponseHelper::error($response, 'Subscription plan limit exceeded for orders this month. Please upgrade your plan.', 403);
+            }
+
             $data = $request->getParsedBody();
             $user = $request->getAttribute('user');
 

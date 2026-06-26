@@ -8,12 +8,20 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\AuditLog;
 use App\Helper\ResponseHelper;
+use App\Services\LimitEnforcementService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Exception;
 
 class CustomerController
 {
+    private LimitEnforcementService $limitEnforcementService;
+
+    public function __construct(LimitEnforcementService $limitEnforcementService)
+    {
+        $this->limitEnforcementService = $limitEnforcementService;
+    }
+
     /**
      * Get all customers
      */
@@ -69,6 +77,10 @@ class CustomerController
     public function create(Request $request, Response $response): Response
     {
         try {
+            if (!$this->limitEnforcementService->canCreateCustomer()) {
+                return ResponseHelper::error($response, 'Subscription plan limit exceeded for customers. Please upgrade your plan.', 403);
+            }
+
             $data = $request->getParsedBody();
             
             // Handle the combined 'name' field if provided

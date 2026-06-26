@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\AuditLog;
 use App\Helper\ResponseHelper;
 use App\Services\UploadService;
+use App\Services\LimitEnforcementService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Exception;
@@ -15,10 +16,12 @@ use Exception;
 class CategoryController
 {
     private UploadService $uploadService;
+    private LimitEnforcementService $limitEnforcementService;
 
-    public function __construct(UploadService $uploadService)
+    public function __construct(UploadService $uploadService, LimitEnforcementService $limitEnforcementService)
     {
         $this->uploadService = $uploadService;
+        $this->limitEnforcementService = $limitEnforcementService;
     }
 
     /**
@@ -56,6 +59,10 @@ class CategoryController
     public function create(Request $request, Response $response): Response
     {
         try {
+            if (!$this->limitEnforcementService->canCreateCategory()) {
+                return ResponseHelper::error($response, 'Subscription plan limit exceeded for categories. Please upgrade your plan.', 403);
+            }
+
             $data = (array)($request->getParsedBody() ?? []);
             $uploadedFiles = $request->getUploadedFiles();
 

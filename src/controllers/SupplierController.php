@@ -11,6 +11,7 @@ use App\Models\AuditLog;
 use App\Helper\ResponseHelper;
 use App\Services\UploadService;
 use App\Services\NotificationService;
+use App\Services\LimitEnforcementService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Exception;
@@ -19,11 +20,13 @@ class SupplierController
 {
     private UploadService $uploadService;
     private NotificationService $notificationService;
+    private LimitEnforcementService $limitEnforcementService;
 
-    public function __construct(UploadService $uploadService, NotificationService $notificationService)
+    public function __construct(UploadService $uploadService, NotificationService $notificationService, LimitEnforcementService $limitEnforcementService)
     {
         $this->uploadService = $uploadService;
         $this->notificationService = $notificationService;
+        $this->limitEnforcementService = $limitEnforcementService;
     }
 
     /**
@@ -61,6 +64,10 @@ class SupplierController
     public function create(Request $request, Response $response): Response
     {
         try {
+            if (!$this->limitEnforcementService->canCreateSupplier()) {
+                return ResponseHelper::error($response, 'Subscription plan limit exceeded for suppliers. Please upgrade your plan.', 403);
+            }
+
             $data = (array)($request->getParsedBody() ?? []);
             $uploadedFiles = $request->getUploadedFiles();
 

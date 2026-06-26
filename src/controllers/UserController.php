@@ -10,6 +10,7 @@ use App\Helper\ResponseHelper;
 use App\Services\VerificationService;
 use App\Services\UploadService;
 use App\Services\NotificationService;
+use App\Services\LimitEnforcementService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Exception;
@@ -23,12 +24,14 @@ class UserController
     private VerificationService $verificationService;
     private UploadService $uploadService;
     private NotificationService $notificationService;
+    private LimitEnforcementService $limitEnforcementService;
 
-    public function __construct(VerificationService $verificationService, UploadService $uploadService, NotificationService $notificationService)
+    public function __construct(VerificationService $verificationService, UploadService $uploadService, NotificationService $notificationService, LimitEnforcementService $limitEnforcementService)
     {
         $this->verificationService = $verificationService;
         $this->uploadService = $uploadService;
         $this->notificationService = $notificationService;
+        $this->limitEnforcementService = $limitEnforcementService;
     }
 
     /**
@@ -73,6 +76,10 @@ class UserController
     public function create(Request $request, Response $response, array $args): Response
     {
         try {
+            if (!$this->limitEnforcementService->canCreateUser()) {
+                return ResponseHelper::error($response, 'Subscription plan limit exceeded for users. Please upgrade your plan.', 403);
+            }
+
             $data = $request->getParsedBody();
             $uploadedFiles = $request->getUploadedFiles();
 

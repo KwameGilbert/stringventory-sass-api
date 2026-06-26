@@ -70,6 +70,7 @@ use App\Services\TemplateEngine;
 use App\Services\CurrencyService;
 use App\Services\UploadService;
 use App\Services\MessagingService;
+use App\Services\LimitEnforcementService;
 use App\Logging\LoggingService;
 use App\Services\NotificationQueue;
 use App\Logging\LoggerFactory;
@@ -102,6 +103,10 @@ return function ($container) {
     
     $container->set(VerificationService::class, function ($container) {
         return new VerificationService($container->get(EmailService::class));
+    });
+
+    $container->set(LimitEnforcementService::class, function () {
+        return new LimitEnforcementService();
     });
 
     // Notification System Services
@@ -177,7 +182,8 @@ return function ($container) {
         return new UserController(
             $container->get(VerificationService::class),
             $container->get(UploadService::class),
-            $container->get(NotificationService::class)
+            $container->get(NotificationService::class),
+            $container->get(LimitEnforcementService::class)
         );
     });
     
@@ -190,20 +196,23 @@ return function ($container) {
 
     $container->set(OrderController::class, function ($container) {
         return new OrderController(
-            $container->get(NotificationService::class)
+            $container->get(NotificationService::class),
+            $container->get(LimitEnforcementService::class)
         );
     });
 
     $container->set(CategoryController::class, function ($container) {
         return new CategoryController(
-            $container->get(UploadService::class)
+            $container->get(UploadService::class),
+            $container->get(LimitEnforcementService::class)
         );
     });
 
     $container->set(SupplierController::class, function ($container) {
         return new SupplierController(
             $container->get(UploadService::class),
-            $container->get(NotificationService::class)
+            $container->get(NotificationService::class),
+            $container->get(LimitEnforcementService::class)
         );
     });
 
@@ -220,12 +229,15 @@ return function ($container) {
     $container->set(ProductController::class, function ($container) {
         return new ProductController(
             $container->get(UploadService::class),
-            $container->get(NotificationService::class)
+            $container->get(NotificationService::class),
+            $container->get(LimitEnforcementService::class)
         );
     });
 
-    $container->set(CustomerController::class, function () {
-        return new CustomerController();
+    $container->set(CustomerController::class, function ($container) {
+        return new CustomerController(
+            $container->get(LimitEnforcementService::class)
+        );
     });
 
     $container->set(ExpenseController::class, function ($container) {
