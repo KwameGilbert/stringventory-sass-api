@@ -11,7 +11,7 @@ use Exception;
 
 /**
  * PasswordResetService
- * 
+ *
  * Handles password reset functionality for Stringventory.
  */
 class PasswordResetService
@@ -31,7 +31,7 @@ class PasswordResetService
     public function sendResetLink(string $email, string $ipAddress = 'unknown'): bool
     {
         try {
-            $user = User::where('email', $email)->first();
+            $user = User::withoutGlobalScopes()->where('email', $email)->first();
             
             if (!$user) {
                 return true; // Honey pots
@@ -81,7 +81,7 @@ class PasswordResetService
                 return false;
             }
 
-            $user = User::where('email', $email)->first();
+            $user = User::withoutGlobalScopes()->where('email', $email)->first();
             if (!$user) {
                 return false;
             }

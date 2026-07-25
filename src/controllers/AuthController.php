@@ -55,7 +55,7 @@ class AuthController
             }
 
             // Check if user already exists
-            $existingUser = User::where('email', $data['email'])->first();
+            $existingUser = User::withoutGlobalScopes()->where('email', $data['email'])->first();
             if ($existingUser) {
                 return ResponseHelper::error($response, 'Account already exists with this email', 409);
             }
@@ -139,7 +139,7 @@ class AuthController
                 return ResponseHelper::error($response, 'Email and password are required', 400);
             }
 
-            $user = User::with(['business.subscription.plan'])->where('email', $data['email'])->first();
+            $user = User::withoutGlobalScopes()->with(['business.subscription.plan'])->where('email', $data['email'])->first();
 
             if (!$user) {
                 $this->authService->logAuditEvent(null, 'login_failed', array_merge($metadata, [

@@ -1,4 +1,4 @@
-### Auth Login Request
+### Login Test Request
 POST http://127.0.0.1:8000/v1/auth/login
 Content-Type: application/json
 
