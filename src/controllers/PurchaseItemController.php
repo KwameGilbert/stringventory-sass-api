@@ -83,7 +83,7 @@ class PurchaseItemController
             $purchaseItem = PurchaseItem::create($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'purchase_item_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'purchase_item_created', [
                 'purchaseItemId' => $purchaseItem->id,
                 'purchaseId' => $purchaseItem->purchaseId,
                 'productId' => $purchaseItem->productId,
@@ -110,7 +110,7 @@ class PurchaseItemController
             $purchaseItem->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'purchase_item_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'purchase_item_updated', [
                 'purchaseItemId' => $purchaseItem->id,
                 'purchaseId' => $purchaseItem->purchaseId,
             ]);
@@ -137,7 +137,7 @@ class PurchaseItemController
             $purchaseItem->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'purchase_item_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'purchase_item_deleted', [
                 'purchaseItemId' => $purchaseItemId,
                 'purchaseId' => $purchaseId,
             ]);

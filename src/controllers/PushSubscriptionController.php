@@ -57,7 +57,7 @@ class PushSubscriptionController
             $pushSubscription = PushSubscription::create($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'push_subscription_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'push_subscription_created', [
                 'pushSubscriptionId' => $pushSubscription->id,
                 'userId' => $pushSubscription->userId,
             ]);
@@ -83,7 +83,7 @@ class PushSubscriptionController
             $pushSubscription->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'push_subscription_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'push_subscription_updated', [
                 'pushSubscriptionId' => $pushSubscription->id,
             ]);
 
@@ -109,7 +109,7 @@ class PushSubscriptionController
             $pushSubscription->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'push_subscription_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'push_subscription_deleted', [
                 'pushSubscriptionId' => $pushSubscriptionId,
                 'userId' => $userId,
             ]);

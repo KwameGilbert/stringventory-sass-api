@@ -57,7 +57,7 @@ class PaymentMethodController
             $paymentMethod = PaymentMethod::create($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $paymentMethod->businessId, $user ? $user->id : null, 'payment_method_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'payment_method_created', [
                 'paymentMethodId' => $paymentMethod->id,
                 'name' => $paymentMethod->name,
             ]);
@@ -83,7 +83,7 @@ class PaymentMethodController
             $paymentMethod->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $paymentMethod->businessId, $user ? $user->id : null, 'payment_method_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'payment_method_updated', [
                 'paymentMethodId' => $paymentMethod->id,
                 'name' => $paymentMethod->name,
             ]);
@@ -111,7 +111,7 @@ class PaymentMethodController
             $paymentMethod->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $businessId, $user ? $user->id : null, 'payment_method_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'payment_method_deleted', [
                 'paymentMethodId' => $paymentMethodId,
                 'name' => $paymentMethodName,
             ]);

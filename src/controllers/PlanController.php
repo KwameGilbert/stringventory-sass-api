@@ -57,7 +57,7 @@ class PlanController
             $plan = Plan::create($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'plan_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'plan_created', [
                 'planId' => $plan->id,
                 'name' => $plan->name,
             ]);
@@ -83,7 +83,7 @@ class PlanController
             $plan->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'plan_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'plan_updated', [
                 'planId' => $plan->id,
                 'name' => $plan->name,
             ]);
@@ -110,7 +110,7 @@ class PlanController
             $plan->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'plan_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'plan_deleted', [
                 'planId' => $planId,
                 'name' => $planName,
             ]);

@@ -88,7 +88,7 @@ class SubscriptionController
             $subscription = Subscription::create($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, (int)$data['businessId'], $user ? $user->id : null, 'subscription_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'subscription_created', [
                 'subscriptionId' => $subscription->id,
                 'businessId' => $subscription->businessId,
                 'planId' => $subscription->planId,
@@ -123,7 +123,7 @@ class SubscriptionController
             $subscription->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $subscription->businessId, $user ? $user->id : null, 'subscription_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'subscription_updated', [
                 'subscriptionId' => $subscription->id,
                 'status' => $subscription->status,
             ]);
@@ -150,7 +150,7 @@ class SubscriptionController
             $subscription->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $businessId, $user ? $user->id : null, 'subscription_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'subscription_deleted', [
                 'subscriptionId' => $subscriptionId,
             ]);
 

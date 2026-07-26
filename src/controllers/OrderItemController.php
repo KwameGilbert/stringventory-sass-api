@@ -83,7 +83,7 @@ class OrderItemController
             $orderItem = OrderItem::create($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'order_item_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'order_item_created', [
                 'orderItemId' => $orderItem->id,
                 'orderId' => $orderItem->orderId,
                 'productId' => $orderItem->productId,
@@ -110,7 +110,7 @@ class OrderItemController
             $orderItem->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'order_item_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'order_item_updated', [
                 'orderItemId' => $orderItem->id,
                 'orderId' => $orderItem->orderId,
             ]);
@@ -137,7 +137,7 @@ class OrderItemController
             $orderItem->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'order_item_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'order_item_deleted', [
                 'orderItemId' => $orderItemId,
                 'orderId' => $orderId,
             ]);

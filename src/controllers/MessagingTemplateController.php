@@ -62,7 +62,7 @@ class MessagingTemplateController
             $template = $this->messagingService->createTemplate($payload);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $template['businessId'] ?? null, $user ? $user->id : null, 'messaging_template_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'messaging_template_created', [
                 'templateId' => $template['id'],
                 'name' => $template['name'],
             ]);
@@ -94,7 +94,7 @@ class MessagingTemplateController
             }
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $template['businessId'] ?? null, $user ? $user->id : null, 'messaging_template_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'messaging_template_updated', [
                 'templateId' => $template['id'],
                 'name' => $template['name'],
             ]);
@@ -122,7 +122,7 @@ class MessagingTemplateController
             }
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'messaging_template_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'messaging_template_deleted', [
                 'templateId' => $templateId,
             ]);
 

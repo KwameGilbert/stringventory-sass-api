@@ -53,4 +53,39 @@ class UtilsController
             return ResponseHelper::error($response, 'Failed to fetch supported currencies', 500, $e->getMessage());
         }
     }
+
+    /**
+     * Run database migrations using Phinx
+     */
+    public function runMigrations(Request $request, Response $response): Response
+    {
+        try {
+            $queryParams = $request->getQueryParams();
+            $secret = $queryParams['secret'] ?? '';
+            if ($secret !== 'stringventory') {
+                return ResponseHelper::error($response, 'Unauthorized: Invalid secret key', 401);
+            }
+
+            $output = [];
+            $retval = null;
+            
+            // Execute Phinx migration command
+            $phinxPath = BASE . 'vendor/bin/phinx';
+            $configPath = BASE . 'phinx.php';
+            
+            // Command to execute using production environment
+            $cmd = "php " . escapeshellarg($phinxPath) . " migrate -c " . escapeshellarg($configPath) . " -e production";
+            
+            exec($cmd . " 2>&1", $output, $retval);
+            
+            return ResponseHelper::jsonResponse($response, [
+                'success' => $retval === 0,
+                'message' => $retval === 0 ? 'Migrations executed successfully' : 'Migrations execution failed',
+                'exit_code' => $retval,
+                'output' => $output
+            ]);
+        } catch (Exception $e) {
+            return ResponseHelper::error($response, 'Failed to run migrations', 500, $e->getMessage());
+        }
+    }
 }

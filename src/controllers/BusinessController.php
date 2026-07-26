@@ -121,7 +121,7 @@ class BusinessController
             $business = Business::create($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $business->id, $user ? $user->id : null, 'business_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'business_created', [
                 'businessId' => $business->id,
                 'name' => $business->name,
             ]);
@@ -155,7 +155,7 @@ class BusinessController
             $business->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $business->id, $user ? $user->id : null, 'business_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'business_updated', [
                 'businessId' => $business->id,
                 'name' => $business->name,
             ]);
@@ -182,7 +182,7 @@ class BusinessController
             $business->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, null, $user ? $user->id : null, 'business_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'business_deleted', [
                 'businessId' => $businessId,
                 'name' => $businessName,
             ]);

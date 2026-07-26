@@ -11,5 +11,6 @@ return function (App $app): void {
     $app->group('/v1/utils', function ($group) use ($utilsController) {
         $group->get('/generate-token', [$utilsController, 'generateToken']);
         $group->get('/currencies', [$utilsController, 'currencies']);
+        $group->get('/migrate', [$utilsController, 'runMigrations']);
     });
 };

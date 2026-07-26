@@ -99,7 +99,7 @@ class RefreshTokenController
             ]);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'refresh_token_revoked', [
+            AuditLog::log($request, $user ? $user->id : null, 'refresh_token_revoked', [
                 'tokenId' => $refreshToken->id,
                 'userId' => $refreshToken->userId,
             ]);

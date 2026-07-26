@@ -69,7 +69,7 @@ class ExchangeRateHistoryController
             $entry = ExchangeRateHistory::create($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'exchange_rate_created', [
+            AuditLog::log($request, $user ? $user->id : null, 'exchange_rate_created', [
                 'entryId' => $entry->id,
                 'baseCurrency' => $entry->baseCurrency,
                 'targetCurrency' => $entry->targetCurrency,
@@ -97,7 +97,7 @@ class ExchangeRateHistoryController
             $entry->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'exchange_rate_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'exchange_rate_updated', [
                 'entryId' => $entry->id,
                 'baseCurrency' => $entry->baseCurrency,
                 'targetCurrency' => $entry->targetCurrency,
@@ -125,7 +125,7 @@ class ExchangeRateHistoryController
             $entry->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $user ? $user->businessId : null, $user ? $user->id : null, 'exchange_rate_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'exchange_rate_deleted', [
                 'entryId' => $entryId,
             ]);
 

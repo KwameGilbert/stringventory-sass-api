@@ -88,7 +88,7 @@ class MessagingCampaignController
 
             $campaignId = $result['campaignId'] ?? null;
             if ($campaignId) {
-                AuditLog::log($request, $user ? $user->businessId : null, $createdBy, 'messaging_campaign_created', [
+                AuditLog::log($request, $createdBy, 'messaging_campaign_created', [
                     'campaignId' => $campaignId,
                     'subject' => $data['subject'] ?? null,
                 ]);
@@ -115,7 +115,7 @@ class MessagingCampaignController
             $campaign->update($data);
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $campaign->businessId, $user ? $user->id : null, 'messaging_campaign_updated', [
+            AuditLog::log($request, $user ? $user->id : null, 'messaging_campaign_updated', [
                 'campaignId' => $campaign->id,
                 'status' => $campaign->status,
             ]);
@@ -142,7 +142,7 @@ class MessagingCampaignController
             $campaign->delete();
 
             $user = $request->getAttribute('user');
-            AuditLog::log($request, $businessId, $user ? $user->id : null, 'messaging_campaign_deleted', [
+            AuditLog::log($request, $user ? $user->id : null, 'messaging_campaign_deleted', [
                 'campaignId' => $campaignId,
             ]);
 
