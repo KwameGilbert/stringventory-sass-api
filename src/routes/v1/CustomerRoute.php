@@ -15,7 +15,7 @@ return function (App $app): void {
     $allRoles = [User::ROLE_CEO, User::ROLE_MANAGER, User::ROLE_SALESPERSON];
     $managementRoles = [User::ROLE_CEO, User::ROLE_MANAGER];
 
-    $app->group('/v1/customers', function ($group) use ($controller, $managementRoles, $allRoles) {
+    $app->group('/v1/business/customers', function ($group) use ($controller, $managementRoles, $allRoles) {
         $group->get('', [$controller, 'index']);
         $group->get('/{id}', [$controller, 'show']);
 

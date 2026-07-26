@@ -28,7 +28,7 @@ return function ($app): void {
         '/v1/purchases' => ROUTE . 'v1/PurchaseRoute.php',
 
         // Sales & Customers
-        '/v1/customers' => ROUTE . 'v1/CustomerRoute.php',
+        '/v1/business/customers' => ROUTE . 'v1/CustomerRoute.php',
         '/v1/orders' => ROUTE . 'v1/OrderRoute.php',
         '/v1/refunds' => ROUTE . 'v1/RefundRoute.php',
 

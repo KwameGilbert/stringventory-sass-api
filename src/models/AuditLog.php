@@ -158,12 +158,18 @@ class AuditLog extends Model
      */
     public static function log(
         Request $request,
-        ?int $businessId,
         ?int $userId,
         string $action,
         array $extra = []
     ): void {
         $serverParams = $request->getServerParams();
+        
+        $businessId = null;
+        $user = $request->getAttribute('user');
+        if ($user) {
+            $businessId = $user->businessId;
+        }
+
         self::create([
             'businessId' => $businessId,
             'userId'    => $userId,
