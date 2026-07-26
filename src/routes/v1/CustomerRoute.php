@@ -15,15 +15,17 @@ return function (App $app): void {
     $allRoles = [User::ROLE_CEO, User::ROLE_MANAGER, User::ROLE_SALESPERSON];
     $managementRoles = [User::ROLE_CEO, User::ROLE_MANAGER];
 
-    $app->group('/v1/business/customers', function ($group) use ($controller, $managementRoles, $allRoles) {
-        $group->get('', [$controller, 'index']);
-        $group->get('/{id}', [$controller, 'show']);
+    foreach (['/v1/customers', '/v1/business/customers'] as $routePath) {
+        $app->group($routePath, function ($group) use ($controller, $managementRoles, $allRoles) {
+            $group->get('', [$controller, 'index']);
+            $group->get('/{id}', [$controller, 'show']);
 
-        // Salespeople can create and update customers
-        $group->post('', [$controller, 'create']);
-        $group->put('/{id}', [$controller, 'update']);
+            // Salespeople can create and update customers
+            $group->post('', [$controller, 'create']);
+            $group->put('/{id}', [$controller, 'update']);
 
-        // Only management can delete customers
-        $group->delete('/{id}', [$controller, 'delete'])->add(new RoleMiddleware($managementRoles));
-    })->add($auth);
+            // Only management can delete customers
+            $group->delete('/{id}', [$controller, 'delete'])->add(new RoleMiddleware($managementRoles));
+        })->add($auth);
+    }
 };
